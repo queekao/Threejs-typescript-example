@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Three.js TypeScript Example</title>
+    <style>
+      body {
+        overflow: hidden;
+        margin: 0px;
+      }
+
+      .c {
+        width: 200px;
+        height: 200px;
+      }
+      #debug1 {
+        font-family: monospace;
+        font-size: larger;
+        position: absolute;
+        left: 0px;
+        top: 50px;
+        border: 1px solid red;
+        width: 180px;
+        height: 220px;
+        color: white;
+        pointer-events: none;
+      }
+
+      #menuPanel {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.5);
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+      }
+
+      #startButton {
+        height: 50px;
+        width: 200px;
+        margin: -25px -100px;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        font-size: 32px;
+      }
+      #animationsPanel {
+        position: absolute;
+        top: 40px;
+        right: 10px;
+        width: 300px;
+        height: auto;
+        border: 1px solid white;
+        color: white;
+        font-family: monospace;
+        font-size: 17px;
+      }
+
+      #animationsPanel ul {
+        padding: 4px;
+        list-style-type: none;
+      }
+
+      #btnPlayAll {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 300px;
+        display: none;
+      }
+
+      #dropzone {
+        position: absolute;
+        width: 140px;
+        height: 90px;
+        left: 10px;
+        top: 50px;
+        border: 10px dotted gray;
+        background-color: lightgray;
+        padding: 20px;
+        font-family: monospace;
+        font-size: 17px;
+      }
+
+      #dropzone p {
+        pointer-events: none;
+      }
+      .measurementLabel {
+        font-family: monospace;
+        background-color: black;
+        color: white;
+      }
+      #pingStats {
+        position: absolute;
+        top: 60px;
+        left: 4px;
+        width: 400px;
+        height: 400px;
+        pointer-events: none;
+        color: white;
+        font-family: monospace;
+      }
+      #progressBar {
+        width: 500px;
+        height: 24px;
+        position: absolute;
+        left: 50%;
+        top: 10px;
+        margin-left: -250px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <progress value="0" max="100" id="progressBar"></progress>
+    <!-- <div id="debug1"></div> -->
+    <!-- this is for client.ts <canvas id="c1" class="c"></canvas>
+    <canvas id="c2" class="c"></canvas>
+    <canvas id="c3" class="c"></canvas>
+    <canvas id="c4" class="c"></canvas> -->
+
+    <!-- this is for pointControl.ts lockControl
+      <div id="menuPanel">
+        <button id="startButton">Click to Start</button>
+      </div> 
+    -->
+    <!-- <div id="pingStats"></div> -->
+    <!-- for drop animation model -->
+    <!-- <div id="dropzone">
+      <p>Drag (uncompressed) animated gLTF/gLB here</p>
+    </div>
+    <button id="btnPlayAll">Play All</button>
+    <div id="animationsPanel"></div> -->
+    <script type="module" src="bundle.js"></script>
+  </body>
+</html>
