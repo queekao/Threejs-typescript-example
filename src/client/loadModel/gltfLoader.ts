@@ -43,17 +43,17 @@ loader.load(
     gltf.scene.traverse(function (child) {
       if ((child as THREE.Mesh).isMesh) {
         // cast each mesh shadow
-        const m = child as THREE.Mesh;
-        m.receiveShadow = true;
-        m.castShadow = true;
+        // const m = child as THREE.Mesh;
+        // m.receiveShadow = true;
+        // m.castShadow = true;
       }
       if ((child as THREE.Light).isLight) {
         // cast each light shadow
-        const l = child as THREE.Light;
-        l.castShadow = true;
-        l.shadow.bias = -0.005; // make the shadow a offset from the obj
-        l.shadow.mapSize.width = 2048;
-        l.shadow.mapSize.height = 2048;
+        // const l = child as THREE.Light;
+        // l.castShadow = true;
+        // l.shadow.bias = -0.005; // make the shadow a offset from the obj
+        // l.shadow.mapSize.width = 2048;
+        // l.shadow.mapSize.height = 2048;
       }
       //   if ((child as THREE.Camera).isCamera) {
       //     // cast each light shadow

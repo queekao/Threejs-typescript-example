@@ -35,7 +35,7 @@ let monkey: THREE.Mesh;
 const loader = new GLTFLoader();
 
 loader.load(
-  "models/untitled.glb",
+  "models/monkey.glb",
   function (gltf) {
     gltf.scene.traverse(function (child) {
       if ((child as THREE.Mesh).isMesh) {

@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+EC2Key.pem
+dist/client/models
+dist/client/img
+dist/client/fonts
+src

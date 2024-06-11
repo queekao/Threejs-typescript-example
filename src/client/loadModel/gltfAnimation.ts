@@ -5,12 +5,11 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import {GUI} from "dat.gui";
 
 const scene = new THREE.Scene();
-scene.add(new THREE.AxesHelper(5));
+// scene.add(new THREE.AxesHelper(5));
 
 const light1 = new THREE.PointLight(0xffffff, 2);
 light1.position.set(2.5, 2.5, 2.5);
 scene.add(light1);
-
 const light2 = new THREE.PointLight(0xffffff, 2);
 light2.position.set(-2.5, 2.5, 2.5);
 scene.add(light2);
@@ -21,15 +20,16 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(0.8, 1.4, 1.0);
+camera.position.set(2.2, 3.2, 2.5);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+renderer.useLegacyLights = true; //use this instead of setting physicallyCorrectLights=true property
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.target.set(0, 1, 0);
+controls.target.set(0, 2, 0);
 
 let mixer: THREE.AnimationMixer;
 let modelReady = false;
@@ -39,7 +39,7 @@ let lastAction: THREE.AnimationAction;
 const gltfLoader = new GLTFLoader();
 
 gltfLoader.load(
-  "models/vanguard.glb",
+  "models/Mesh/Umbrella__Intro_Anim.glb",
   (gltf) => {
     // gltf.scene.scale.set(.01, .01, .01)
 
@@ -48,41 +48,52 @@ gltfLoader.load(
     const animationAction = mixer.clipAction((gltf as any).animations[0]);
     animationActions.push(animationAction);
     animationsFolder.add(animations, "default");
+    animationAction.loop = THREE.LoopOnce; // Set the animation to play only once
+    animationAction.clampWhenFinished = true; // Stop the animation on the last frame
+    animationAction.enabled = true;
     activeAction = animationActions[0];
 
     scene.add(gltf.scene);
 
     // //add an animation from another file
     gltfLoader.load(
-      "models/vanguard@samba.glb",
+      "models/Mesh-2/Umbrella_Rig_Open_BoneOnly.glb",
       (gltf) => {
-        console.log("loaded samba");
+        console.log("open");
         const animationAction = mixer.clipAction((gltf as any).animations[0]);
         animationActions.push(animationAction);
-        animationsFolder.add(animations, "samba");
+        animationsFolder.add(animations, "open");
+        animationAction.loop = THREE.LoopOnce; // Set the animation to play only once
+        animationAction.clampWhenFinished = true; // Stop the animation on the last frame
+        animationAction.enabled = true;
 
         //add an animation from another file
         gltfLoader.load(
-          "models/vanguard@bellydance.glb",
+          "models/Mesh-2/Umbrella_Rig_Close_BoneOnly.glb",
           (gltf) => {
-            console.log("loaded bellydance");
+            console.log("close");
             const animationAction = mixer.clipAction(
               (gltf as any).animations[0]
             );
             animationActions.push(animationAction);
-            animationsFolder.add(animations, "bellydance");
-
+            animationsFolder.add(animations, "close");
+            animationAction.loop = THREE.LoopOnce; // Set the animation to play only once
+            animationAction.clampWhenFinished = true; // Stop the animation on the last frame
+            animationAction.enabled = true;
             //add an animation from another file
             gltfLoader.load(
-              "models/vanguard@goofyrunning.glb",
+              "models/Mesh-2/Umbrella__Intro_Anim_BoneOnly.glb",
               (gltf) => {
-                console.log("loaded goofyrunning");
+                console.log("amin");
                 (gltf as any).animations[0].tracks.shift(); //delete the specific track that moves the object forward while running
                 const animationAction = mixer.clipAction(
                   (gltf as any).animations[0]
                 );
                 animationActions.push(animationAction);
-                animationsFolder.add(animations, "goofyrunning");
+                animationsFolder.add(animations, "amin");
+                animationAction.loop = THREE.LoopOnce; // Set the animation to play only once
+                animationAction.clampWhenFinished = true; // Stop the animation on the last frame
+                animationAction.enabled = true;
 
                 modelReady = true;
               },
@@ -133,13 +144,13 @@ const animations = {
   default: function () {
     setAction(animationActions[0]);
   },
-  samba: function () {
+  open: function () {
     setAction(animationActions[1]);
   },
-  bellydance: function () {
+  close: function () {
     setAction(animationActions[2]);
   },
-  goofyrunning: function () {
+  amin: function () {
     setAction(animationActions[3]);
   },
 };
@@ -148,7 +159,7 @@ const setAction = (toAction: THREE.AnimationAction) => {
   if (toAction != activeAction) {
     lastAction = activeAction;
     activeAction = toAction;
-    //lastAction.stop()
+    // lastAction.stop();
     lastAction.fadeOut(1);
     activeAction.reset();
     activeAction.fadeIn(1);
@@ -158,7 +169,19 @@ const setAction = (toAction: THREE.AnimationAction) => {
 
 const gui = new GUI();
 const animationsFolder = gui.addFolder("Animations");
+const data = {
+  color: light1.color.getHex(),
+  mapsEnabled: true,
+  // groundColor: light.groundColor.getHex(),
+};
+
+const lightFolder = gui.addFolder("THREE.Light");
+lightFolder.addColor(data, "color").onChange(() => {
+  light1.color.setHex(Number(data.color.toString().replace("#", "0x")));
+});
+
 animationsFolder.open();
+lightFolder.open();
 
 const clock = new THREE.Clock();
 

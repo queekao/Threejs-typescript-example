@@ -7,7 +7,9 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
-const port = 3000;
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const port = 3005;
 class App {
     server;
     port;
@@ -20,9 +22,15 @@ class App {
         this.server = new http_1.default.Server(app);
         this.io = new socket_io_1.Server(this.server);
         this.io.on("connection", (socket) => {
+            if (process.env.NODE_ENV === "production") {
+                console.log("prod");
+            }
+            else if (process.env.NODE_ENV === "development") {
+                console.log("dev", __dirname);
+            }
             console.log(socket.constructor.name);
             this.clients[socket.id] = {};
-            console.log(this.clients);
+            console.log(this.clients); // we simply accept message from client but do nothing
             console.log("a user connected : " + socket.id);
             socket.emit("id", socket.id);
             socket.on("disconnect", () => {

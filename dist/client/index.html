@@ -102,30 +102,29 @@
         font-family: monospace;
       }
       #progressBar {
-        width: 500px;
+        width: 70vw;
         height: 24px;
         position: absolute;
         left: 50%;
-        top: 10px;
-        margin-left: -250px;
+        transform: translateX(-50%);
       }
     </style>
   </head>
 
   <body>
-    <progress value="0" max="100" id="progressBar"></progress>
+    <!-- <progress value="0" max="100" id="progressBar"></progress> -->
     <!-- <div id="debug1"></div> -->
-    <!-- this is for client.ts <canvas id="c1" class="c"></canvas>
+    <!-- <canvas id="c1" class="c"></canvas>
     <canvas id="c2" class="c"></canvas>
     <canvas id="c3" class="c"></canvas>
     <canvas id="c4" class="c"></canvas> -->
 
-    <!-- this is for pointControl.ts lockControl
-      <div id="menuPanel">
-        <button id="startButton">Click to Start</button>
-      </div> 
-    -->
-    <!-- <div id="pingStats"></div> -->
+    <!-- this is for pointControl.ts lockControl -->
+    <!-- <div id="menuPanel">
+      <button id="startButton">Click to Start</button>
+    </div> -->
+
+    <div id="pingStats"></div>
     <!-- for drop animation model -->
     <!-- <div id="dropzone">
       <p>Drag (uncompressed) animated gLTF/gLB here</p>

@@ -18,8 +18,8 @@ light1.shadow.mapSize.height = 1024;
 light1.shadow.camera.near = 0.5;
 light1.shadow.camera.far = 20;
 scene.add(light1);
-// const light = new THREE.AmbientLight();
-// scene.add(light);
+const light = new THREE.AmbientLight();
+scene.add(light);
 
 const light2 = new THREE.SpotLight();
 light2.position.set(-2.5, 5, 2.5);
@@ -68,95 +68,94 @@ let modelMesh: THREE.Object3D;
 const animationActions: THREE.AnimationAction[] = [];
 let activeAction: THREE.AnimationAction;
 let lastAction: THREE.AnimationAction;
-const gltfLoader = new GLTFLoader();
-
-gltfLoader.load(
-  "models/vanguard.glb",
-  (gltf) => {
-    gltf.scene.traverse(function (child) {
-      if ((child as THREE.Mesh).isMesh) {
-        const m = child as THREE.Mesh;
-        m.castShadow = true;
-        m.frustumCulled = false; // when model outside of camera's view frustum it wont be rendered so we need to set 'false' that the model render not only inside of camera
-      }
-    });
-
-    mixer = new THREE.AnimationMixer(gltf.scene);
-
-    const animationAction = mixer.clipAction((gltf as any).animations[0]);
-    animationActions.push(animationAction);
-    animationsFolder.add(animations, "default");
-    activeAction = animationActions[0];
-
-    scene.add(gltf.scene);
-    modelMesh = gltf.scene;
-
-    //add an animation from another file
-    gltfLoader.load(
-      "models/vanguard@samba.glb",
-      (gltf) => {
-        console.log("loaded samba");
-        const animationAction = mixer.clipAction((gltf as any).animations[0]);
-        animationActions.push(animationAction);
-        animationsFolder.add(animations, "samba");
-
-        //add an animation from another file
-        gltfLoader.load(
-          "models/vanguard@bellydance.glb",
-          (gltf) => {
-            console.log("loaded bellydance");
-            const animationAction = mixer.clipAction(
-              (gltf as any).animations[0]
-            );
-            animationActions.push(animationAction);
-            animationsFolder.add(animations, "bellydance");
-
-            //add an animation from another file
-            gltfLoader.load(
-              "models/vanguard@goofyrunning.glb",
-              (gltf) => {
-                console.log("loaded goofyrunning");
-                (gltf as any).animations[0].tracks.shift(); //delete the specific track that moves the object forward while running
-                const animationAction = mixer.clipAction(
-                  (gltf as any).animations[0]
-                );
-                animationActions.push(animationAction);
-                animationsFolder.add(animations, "goofyrunning");
-
-                modelReady = true;
-              },
-              (xhr) => {
-                console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
-          },
-          (xhr) => {
-            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+const loaderManagement = new THREE.LoadingManager(
+  () => {
+    console.timeEnd("load model");
+    progressBar.style.display = "none";
+    console.log("load");
   },
-  (xhr) => {
-    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-  },
-  (error) => {
-    console.log(error);
+  undefined,
+  (url) => {
+    console.error(`${url} wrong path`);
   }
 );
-console.log(animationActions);
+loaderManagement.onProgress = (itemsLoaded, itemsTotal, progress) => {
+  const percentComplete = Math.round(itemsTotal) * 10;
+  // for (let i = 0; i < 3000000000; i++) {}
+  progressBar.value = percentComplete === Infinity ? 100 : percentComplete;
+  // console.log(`Loading progress: ${progress}%`, itemsLoaded, itemsTotal);
+};
+const gltfLoader = new GLTFLoader(loaderManagement);
+const progressBar = document.getElementById(
+  "progressBar"
+) as HTMLProgressElement;
+gltfLoader.load("models/vanguard.glb", (gltf) => {
+  gltf.scene.traverse(function (child) {
+    if ((child as THREE.Mesh).isMesh) {
+      // const geometry = child.geometry;
+      // const positionAttribute = geometry.getAttribute("position");
+      // const normalAttribute = geometry.getAttribute("normal");
+      // const uvAttribute = geometry.getAttribute("uv");
+
+      // for (let i = 0; i < positionAttribute.count; i++) {
+      //   const x = positionAttribute.getX(i);
+      //   const y = positionAttribute.getY(i);
+      //   const z = positionAttribute.getZ(i);
+      //   positionArray.push(x, y, z);
+      // }
+
+      // for (let i = 0; i < normalAttribute.count; i++) {
+      //   const x = normalAttribute.getX(i);
+      //   const y = normalAttribute.getY(i);
+      //   const z = normalAttribute.getZ(i);
+      //   normalArray.push(x, y, z);
+      // }
+
+      // for (let i = 0; i < uvAttribute.count; i++) {
+      //   const u = uvAttribute.getX(i);
+      //   const v = uvAttribute.getY(i);
+      //   uvArray.push(u, v);
+      // }
+      const m = child as THREE.Mesh;
+      m.castShadow = true;
+      m.frustumCulled = false; // when model outside of camera's view frustum it wont be rendered so we need to set 'false' that the model render not only inside of camera
+    }
+  });
+  mixer = new THREE.AnimationMixer(gltf.scene);
+
+  const animationAction = mixer.clipAction((gltf as any).animations[0]);
+  animationActions.push(animationAction);
+  animationsFolder.add(animations, "default");
+  activeAction = animationActions[0];
+
+  scene.add(gltf.scene);
+  modelMesh = gltf.scene;
+  //add an animation from another file
+  gltfLoader.load("models/vanguard@goofyrunning.glb", (gltf) => {
+    console.log("loaded goofyrunning");
+    (gltf as any).animations[0].tracks.shift(); //delete the specific track that moves the object forward while running
+    const animationAction = mixer.clipAction((gltf as any).animations[0]);
+    animationActions.push(animationAction);
+    animationsFolder.add(animations, "goofyrunning");
+    modelReady = true;
+  });
+  //add an animation from another file
+  gltfLoader.load("models/vanguard@samba.glb", (gltf) => {
+    console.log("loaded samba");
+    scene.add(gltf.scene);
+    const animationAction = mixer.clipAction((gltf as any).animations[0]);
+    animationActions.push(animationAction);
+    animationsFolder.add(animations, "samba");
+  });
+  //add an animation from another file
+  gltfLoader.load("models/vanguard@bellydance.glb", (gltf) => {
+    console.log("loaded bellydance");
+    const animationAction = mixer.clipAction((gltf as any).animations[0]);
+    animationActions.push(animationAction);
+    animationsFolder.add(animations, "bellydance");
+  });
+});
+
 window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -166,15 +165,32 @@ function onWindowResize() {
 }
 
 const raycaster = new THREE.Raycaster();
-const targetQuaternion = new THREE.Quaternion(); //This is used for rotating things without incurring in the dreaded gimbal lock issue
-const mouse = new THREE.Vector2();
 
+//This is used for rotating things without incurring in the dreaded gimbal lock issue accept a Matrix4
+const targetQuaternion = new THREE.Quaternion();
+const mouse = new THREE.Vector2();
+const geometry = new THREE.BufferGeometry();
+// create a simple square shape. We duplicate the top left and bottom right
+// vertices because each vertex needs to appear once per triangle.
+const vertices = new Float32Array([
+  -1.0, -1.0, 1.0, 1.0, -10.0, 1.0, 1.0, 1.0, 1.0,
+
+  1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0,
+]);
+
+// itemSize = 3 because there are 3 values (components) per vertex
+geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+const matrix = new THREE.Matrix4().makeTranslation(-5, 0, 0);
+geometry.applyMatrix4(matrix);
+
+const material = new THREE.MeshBasicMaterial({color: 0xff0000});
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
 function onDoubleClick(event: MouseEvent) {
   mouse.set(
     (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
     -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
   );
-  console.log(renderer.domElement.clientWidth);
 
   raycaster.setFromCamera(mouse, camera);
 
@@ -182,7 +198,6 @@ function onDoubleClick(event: MouseEvent) {
 
   if (intersects.length > 0) {
     const p = intersects[0].point;
-
     const distance = modelMesh.position.distanceTo(p);
 
     // modelMesh.lookAt(p); // this will make the obj face to the point and run toward there
@@ -191,7 +206,7 @@ function onDoubleClick(event: MouseEvent) {
     rotationMatrix.lookAt(p, modelMesh.position, modelMesh.up);
     targetQuaternion.setFromRotationMatrix(rotationMatrix);
 
-    setAction(animationActions[3]); // walking
+    setAction(animationActions[1]); // walking
 
     TWEEN.removeAll(); // ensure one tween at the time
     new TWEEN.Tween(modelMesh.position)
@@ -215,7 +230,7 @@ function onDoubleClick(event: MouseEvent) {
       })
       .start()
       .onComplete(() => {
-        setAction(animationActions[1]); //bellly
+        setAction(animationActions[2]); //bellly
         // stop play it will stay the end animation
         activeAction.clampWhenFinished = true; //can be set to a boolean value to specify whether the animation should stop playing once it reaches the end
         activeAction.loop = THREE.LoopOnce; // only do once animation
@@ -246,10 +261,10 @@ const setAction = (toAction: THREE.AnimationAction) => {
   if (toAction != activeAction) {
     lastAction = activeAction;
     activeAction = toAction;
-    //lastAction.stop()
-    lastAction.fadeOut(0.2);
+    // lastAction.stop();
+    lastAction.fadeOut(0.5);
     activeAction.reset();
-    activeAction.fadeIn(0.2);
+    activeAction.fadeIn(0.5);
     activeAction.play();
   }
 };
@@ -260,7 +275,6 @@ animationsFolder.open();
 
 const clock = new THREE.Clock();
 let delta = 0;
-console.log(clock);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -271,8 +285,9 @@ function animate() {
     delta = clock.getDelta();
 
     mixer.update(delta);
-
+    //update everytime while transform rotation
     if (!modelMesh.quaternion.equals(targetQuaternion)) {
+      // if the target is not going toward the destination then rotateToward
       modelMesh.quaternion.rotateTowards(targetQuaternion, delta * 10);
     }
   }

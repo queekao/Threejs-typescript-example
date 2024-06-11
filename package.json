@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config ./src/client/webpack.prod.js",
+    "build:server": "tsc -p ./src/server",
     "start": "nodemon ./dist/server/server.js",
     "dev:client": "webpack serve --config ./src/client/webpack.dev.js",
     "dev": "concurrently -k \"tsc -p ./src/server -w\" \"nodemon ./dist/server/server.js\" \"webpack serve --config ./src/client/webpack.dev.js\"",
@@ -21,6 +22,8 @@
     "clean-webpack-plugin": "^4.0.0",
     "concurrently": "^8.0.1",
     "dat.gui": "^0.7.9",
+    "dotenv": "^16.1.4",
+    "nodemon": "^2.0.22",
     "mini-css-extract-plugin": "^2.7.5",
     "terser-webpack-plugin": "^5.3.7",
     "three": "^0.150.1",

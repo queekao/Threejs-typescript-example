@@ -12,9 +12,7 @@ const loaderManagement = new THREE.LoadingManager(
   (url, load, total) => {
     console.log(`${Math.round((load / total) * 100)}%`);
   },
-  (url) => {
-    console.log();
-  }
+  (url) => {}
 );
 const cubeMap = new THREE.CubeTextureLoader(loaderManagement).load([
   "img/px_eso0932a.jpg",
@@ -182,14 +180,14 @@ const material1 = new THREE.MeshPhongMaterial({
   combine: THREE.MixOperation,
 });
 const material2 = new THREE.MeshPhongMaterial({
-  shininess: 100,
-  color: 0xffffff,
-  specular: 0xffffff,
+  // shininess: 100,
+  // color: 0xffffff,
+  // specular: 0xffffff,
   envMap: cubeRenderTarget2.texture,
-  refractionRatio: 0.5,
-  transparent: true,
-  side: THREE.BackSide,
-  combine: THREE.MixOperation,
+  // refractionRatio: 0.5,
+  // transparent: true,
+  // side: THREE.BackSide,
+  // combine: THREE.MixOperation,
 });
 const material3 = new THREE.MeshPhongMaterial({
   shininess: 100,
@@ -205,7 +203,7 @@ const material3 = new THREE.MeshPhongMaterial({
 console.log(cubeRenderTarget2.texture);
 // this will make the realistic reflection
 cubeRenderTarget1.texture.mapping = THREE.CubeRefractionMapping;
-cubeRenderTarget2.texture.mapping = THREE.CubeRefractionMapping;
+// cubeRenderTarget2.texture.mapping = THREE.CubeRefractionMapping;
 cubeRenderTarget3.texture.mapping = THREE.CubeRefractionMapping;
 
 const ball1 = new THREE.Mesh(new THREE.TorusGeometry(1), material1);
@@ -213,7 +211,7 @@ ball1.position.set(1, 1.1, 0);
 ball1.castShadow = true;
 ball1.receiveShadow = true;
 ball1.add(cubeCamera1);
-pivot1.add(ball1);
+// pivot1.add(ball1);
 
 const ball2 = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material2);
 ball2.position.set(3.1, 1.1, 0);
@@ -227,7 +225,7 @@ ball3.position.set(5.2, 1.1, 0);
 ball3.castShadow = true;
 ball3.receiveShadow = true;
 ball3.add(cubeCamera3);
-pivot3.add(ball3); // add a mesh to Object3D
+// pivot3.add(ball3); // add a mesh to Object3D
 
 const data = {refractionRatio: 0};
 

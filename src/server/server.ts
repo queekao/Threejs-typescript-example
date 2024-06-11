@@ -2,8 +2,9 @@ import express from "express";
 import path from "path";
 import http from "http";
 import {Server, Socket} from "socket.io";
-
-const port: number = 3000;
+import dotenv from "dotenv";
+dotenv.config();
+const port: number = 3005;
 
 class App {
   private server: http.Server;
@@ -16,15 +17,19 @@ class App {
     this.port = port;
     const app = express();
     app.use(express.static(path.join(__dirname, "../client")));
-
     this.server = new http.Server(app);
 
     this.io = new Server(this.server);
 
     this.io.on("connection", (socket: Socket) => {
+      if (process.env.NODE_ENV === "production") {
+        console.log("prod");
+      } else if (process.env.NODE_ENV === "development") {
+        console.log("dev", __dirname);
+      }
       console.log(socket.constructor.name);
       this.clients[socket.id] = {};
-      console.log(this.clients);
+      console.log(this.clients); // we simply accept message from client but do nothing
       console.log("a user connected : " + socket.id);
       socket.emit("id", socket.id);
 

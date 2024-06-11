@@ -1,0 +1,32 @@
+# version: "3"
+# services:
+#   frontend_react:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.nginx
+#     ports:
+#       - "80:80"
+version: "3"
+services:
+  node-app:
+    # image: node:16
+    container_name: node_socket
+    # working_dir: /usr/src/app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3005:3005
+    networks:
+      - socket_app
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./default.conf:/etc/nginx/nginx.conf
+    networks:
+      - socket_app
+networks:
+  socket_app:

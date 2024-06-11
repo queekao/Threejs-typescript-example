@@ -1,22 +1,21 @@
-const path = require('path')
-const isProduction = process.env.NODE_ENV === 'production';
+const path = require("path");
 module.exports = {
-    // entry: './src/client/cannon/cannonShootGame.ts',
-    entry: './src/client/multiLoader.ts',
-    module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/,
-            },
-        ],
-    },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
-    },
-    output: {
-        filename: isProduction ? 'bundle.[hash].js' : 'bundle.js',
-        path: path.resolve(__dirname, '../../dist/client'),
-    },
-}
+  // entry: "./src/client/raycaster/raycaster.ts",
+  entry: "./src/client/socketExample.ts",
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
+  output: {
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "../../dist/client"),
+  },
+};

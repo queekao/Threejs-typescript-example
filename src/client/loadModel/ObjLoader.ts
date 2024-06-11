@@ -41,8 +41,6 @@ objLoader.load(
   (object) => {
     console.log(object.children);
     object.position.z = -3;
-    // material is not a property of obj3D but is property of THREE.Mesh
-    //assertions - https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions
     (object.children[0] as THREE.Mesh).material = material; // change material
     scene.add(object);
   },
